@@ -15,6 +15,7 @@ class VegetablesCNN:
         model = tf.keras.models.Sequential()
 
         # Add convolutional layers to the model
+        model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=self.input_shape))
 
         return model
 
@@ -24,8 +25,8 @@ class VegetablesCNN:
     def compile(self, optimizer, loss, metrics):
         self.model.compile(optimizer=optimizer, loss=loss, metrics=metrics)
 
-    def fit(self, x_train, y_train, batch_size, epochs, validation_data):
-        self.model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=validation_data)
+    def fit(self, x_train, y_train, batch_size, epochs, validation_data=None):
+        self.model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_split=0.2)
 
     def evaluate(self, x_test, y_test):
         return self.model.evaluate(x_test, y_test)
