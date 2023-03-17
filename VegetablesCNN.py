@@ -3,6 +3,7 @@ from tensorflow import keras
 from keras import layers
 import numpy
 
+
 class VegetablesCNN:
 
     def __init__(self, input_shape, num_classes):
