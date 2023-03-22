@@ -10,9 +10,10 @@ classes = ['Bean', 'Bitter_Gourd', 'Bottle_Gourd', 'Brinjal', 'Broccoli', 'Cabba
 classes_number = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 
 # Load the training dataset
-# x_train, y_train = load_data("train", classes)
-# y_train = np.asarray(y_train).astype('int32')
+x_train, y_train = utils.load_data("train", classes)
+y_train = np.asarray(y_train).astype('int32')
 
+print(x_train.shape)
 # Load the validation dataset
 x_validation, y_validation = utils.load_data("validation", classes)
 
@@ -44,7 +45,7 @@ vegetables_cnn.summary()
 vegetables_cnn.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # Train the model and all the values (loss, accuracy) for training phase and the validation phase
-training_values = vegetables_cnn.fit(x_test, y_test, batch_size, epochs, validation_data)
+training_values = vegetables_cnn.fit(x_train, y_train, batch_size, epochs, validation_data)
 
 # Evaluate the model with the test dataset
 score = vegetables_cnn.evaluate(x_test, y_test)

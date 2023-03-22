@@ -2,7 +2,6 @@ import tensorflow as tf
 from keras import layers
 
 
-
 class VegetablesCNN:
 
     def __init__(self, input_shape, num_classes):
@@ -14,11 +13,14 @@ class VegetablesCNN:
         model = tf.keras.models.Sequential()
 
         # Add convolutional layers to the model
-        model.add(layers.Conv2D(64, (5, 5), strides=1, activation='relu', input_shape=self.input_shape))
-        model.add(layers.Conv2D(32, (3, 3), strides=2, activation='relu', input_shape=self.input_shape))
-        model.add(layers.Conv2D(16, (3, 3), strides=1, activation='relu', input_shape=self.input_shape))
-        model.add(layers.Conv2D(8, (3, 3), strides=2, activation='relu', input_shape=self.input_shape))
+        model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu', input_shape=self.input_shape))
+        model.add(layers.Conv2D(64, (3, 3), strides=2, activation='relu'))
+        model.add(layers.Conv2D(128, (3, 3), strides=2, activation='relu'))
+        model.add(layers.Conv2D(64, (3, 3), strides=1, activation='relu'))
+        model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu'))
+
         model.add(layers.Flatten())
+
         model.add(layers.Dense(self.num_classes, activation="softmax"))
 
         return model
