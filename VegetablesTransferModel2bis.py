@@ -1,15 +1,12 @@
 # Common
 import os
-
-from keras.callbacks import EarlyStopping
-
 import Utils as utils
 import numpy as np
 
 # Model
 from keras.models import Sequential
 from keras.applications import ResNet50V2
-from keras.layers import GlobalAvgPool2D as GAP, Dense
+from keras.layers import Dense, Flatten
 
 # Class Names
 root_path = './Vegetable Images/train/'
@@ -20,8 +17,8 @@ n_classes = len(class_names)
 classes_number = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
 
 # Load the training dataset
-#x_train, y_train = utils.load_data("train", class_names)
-#y_train = np.asarray(y_train).astype('int32')
+x_train, y_train = utils.load_data("train", class_names)
+y_train = np.asarray(y_train).astype('int32')
 
 # Load the validation dataset
 x_validation, y_validation = utils.load_data("validation", class_names)
@@ -39,23 +36,22 @@ input_shape = (112, 112, 3)
 
 # Define the number of batch and epochs
 batch_size = 64
-epochs = 10
+epochs = 8
 
 # Pre-Trained Model
 base_model = ResNet50V2(weights="imagenet", input_shape=input_shape, include_top=False)
-base_model.trainable = False
+for layer in base_model.layers:
+    layer.trainable = False
 
 # Model Architecture
 name = "ResNet50V2"
 model = Sequential([
     base_model,
-    GAP(),
-    Dense(112, activation='relu', kernel_initializer='he_normal'),
+    Flatten(),
+    Dense(256, activation='relu', kernel_initializer='he_normal'),
+    Dense(128, activation='relu', kernel_initializer='he_normal'),
     Dense(n_classes, activation='softmax')
 ], name=name)
-
-# Callbacks
-model_checkpoint_callback = EarlyStopping(patience=3, restore_best_weights=True)
 
 # Print the model information
 model.summary()
@@ -64,11 +60,10 @@ model.summary()
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
 # Train the model and all the values (loss, accuracy) for training phase and the validation phase
-training_values = model.fit(x_test, y_test, batch_size=batch_size, epochs=epochs,
-                            callbacks=model_checkpoint_callback, validation_data=validation_data)
+training_values = model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=validation_data)
 
 # Evaluate the model with the test dataset
-score = model.evaluate(x_test, y_test)
+score = model.evaluate(x_train, y_train)
 
 # Print the results of the evaluation
 print('Loss Score:', score[0])
@@ -80,16 +75,16 @@ utils.display_graph(training_values.history['loss'], training_values.history['ac
                     training_values.history['val_accuracy'])
 
 # Get the prediction for the test dataset
-y_prediction = model.predict(x_test)
+y_prediction = model.predict(x_train)
 
 # Translate the prediction to obtain the class number for each
 y_translated = utils.translate_y_pred(y_prediction)
 
 # Generate rapport of the classification with sklearn
-utils.generate_report(y_test, y_translated, classes_number)
+utils.generate_report(y_train, y_translated, classes_number)
 
 # Compile and print the kappa coefficient
-utils.get_kappa_coefficient(y_test, y_translated, classes_number)
+utils.get_kappa_coefficient(y_train, y_translated, classes_number)
 
 
 # https://www.kaggle.com/code/utkarshsaxenadn/vegetable-classification-resnet50v2-acc-99/notebook
