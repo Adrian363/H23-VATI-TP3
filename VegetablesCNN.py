@@ -17,14 +17,12 @@ class VegetablesCNN:
         model.add(layers.Conv2D(64, (3, 3), strides=2, activation='relu'))
         model.add(layers.Conv2D(128, (3, 3), strides=2, activation='relu'))
         model.add(layers.Conv2D(64, (3, 3), strides=1, activation='relu'))
-        model.add(layers.Conv2D(32, (3, 3), strides=1, activation='relu'))
 
         model.add(layers.Flatten())
 
         model.add(layers.Dense(self.num_classes, activation="softmax"))
 
         return model
-
     def summary(self):
         self.model.summary()
 
