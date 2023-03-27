@@ -35,8 +35,8 @@ validation_data = (x_validation, y_validation)
 input_shape = (112, 112, 3)
 
 # Define the number of batch and epochs
-batch_size = 64
-epochs = 8
+batch_size = 32
+epochs = 10
 
 # Pre-Trained Model
 base_model = ResNet50V2(weights="imagenet", input_shape=input_shape, include_top=False)
@@ -50,6 +50,7 @@ model = Sequential([
     Flatten(),
     Dense(256, activation='relu', kernel_initializer='he_normal'),
     Dense(128, activation='relu', kernel_initializer='he_normal'),
+    Dense(64, activation='relu', kernel_initializer='he_normal'),
     Dense(n_classes, activation='softmax')
 ], name=name)
 
@@ -63,7 +64,7 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 training_values = model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=validation_data)
 
 # Evaluate the model with the test dataset
-score = model.evaluate(x_train, y_train)
+score = model.evaluate(x_test, y_test)
 
 # Print the results of the evaluation
 print('Loss Score:', score[0])
@@ -75,16 +76,16 @@ utils.display_graph(training_values.history['loss'], training_values.history['ac
                     training_values.history['val_accuracy'])
 
 # Get the prediction for the test dataset
-y_prediction = model.predict(x_train)
+y_prediction = model.predict(x_test)
 
 # Translate the prediction to obtain the class number for each
 y_translated = utils.translate_y_pred(y_prediction)
 
 # Generate rapport of the classification with sklearn
-utils.generate_report(y_train, y_translated, classes_number)
+utils.generate_report(y_test, y_translated, classes_number)
 
 # Compile and print the kappa coefficient
-utils.get_kappa_coefficient(y_train, y_translated, classes_number)
+utils.get_kappa_coefficient(y_test, y_translated, classes_number)
 
 
 # https://www.kaggle.com/code/utkarshsaxenadn/vegetable-classification-resnet50v2-acc-99/notebook
