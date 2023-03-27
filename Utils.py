@@ -8,15 +8,21 @@ from PIL import Image
 
 # Load the data and group them to create the different datasets
 def load_data(dataset_phase, classes):
+
+    #  Load the vegetables folders for the selected dataset phase
     vegetables_folder = os.listdir("Vegetable Images/{}".format(dataset_phase))
 
+    # Images and labels
     x_img = []
     y_img = []
 
+    # For each vegetable folder, load the images and add them to the list
     for vegetable in vegetables_folder:
 
+        # Get the image linked to the selected vegetable
         vegetable_folder_content = os.listdir("Vegetable Images/{}/{}".format(dataset_phase, vegetable))
 
+        # For each image, load it in the x array and add the class name to the y array
         for img in vegetable_folder_content:
             image_path = "Vegetable Images/{}/{}/{}".format(dataset_phase, vegetable, img)
             img_opened = Image.open(image_path).convert('RGB')
