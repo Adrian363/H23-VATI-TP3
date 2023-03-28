@@ -7,7 +7,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.applications import ResNet50V2
 from keras.layers import Dense, Flatten
-
+git 
 # Class Names
 root_path = './Vegetable Images/train/'
 class_names = sorted(os.listdir(root_path))
@@ -35,7 +35,7 @@ validation_data = (x_validation, y_validation)
 input_shape = (112, 112, 3)
 
 # Define the number of batch and epochs
-batch_size = 32
+batch_size = 64
 epochs = 10
 
 # Pre-Trained Model
@@ -86,10 +86,3 @@ utils.generate_report(y_test, y_translated, classes_number)
 
 # Compile and print the kappa coefficient
 utils.get_kappa_coefficient(y_test, y_translated, classes_number)
-
-
-# https://www.kaggle.com/code/utkarshsaxenadn/vegetable-classification-resnet50v2-acc-99/notebook
-# https://keras.io/api/layers/core_layers/dense/
-# https://keras.io/api/applications/#usage-examples-for-image-classification-models
-# https://keras.io/guides/transfer_learning/
-# https://keras.io/api/models/model_training_apis/
